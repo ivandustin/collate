@@ -1,35 +1,111 @@
 const empty = ''
-let   id    = 0
 
-class CustomArray extends Array {
-    constructor(array) {
-        super(...array)
-        this.id = id++
-    }
+function align(input, same = default_same) {    
+    let { indexed, above, below } = preprocess(input)
+    above                         = process(above, below, same)
+    let output                    = postprocess(above, indexed)
+    return output
 }
 
-function align(input, same = default_same) {
-    input           = input.map(array => new CustomArray(array))
-    let ids         = input.map(array => array.id)
-    let below       = sort(input)
-    let max_length  = below[0].length
-    let above       = below.map(()=> empty_array(max_length))
-    let result      = []
+function preprocess(input) {
+    let indexed = sort(index(input))
+    let below   = create_below(indexed)
+    let above   = create_above(below)
+    return { indexed, above, below }
+}
 
-    below.forEach(function(source, index) {
-        surface(source, above, index, same)
-    })
+function process(above, below, same) {
+    for (let i = 1; i < below.length; i++) {
+        let results = []
+        results.push(backward(above, below, i, same))
+        results.push(forward(above, below, i, same))
+        results.sort((a,b)=> a.score - b.score)
+        above = results.pop().above
+    }
+    return above
+}
 
-    ids.forEach(function(id) {
-        let index = below.findIndex(array => array.id == id)
-        result.push(above[index])
-    })
+function postprocess(above, indexed) {
+    let output = new Array(above.length)
+    for (let i = 0; i < above.length; i++)
+        output[indexed[i].index] = above[i]
+    return output
+}
 
+function forward(above, below, index, same) {
+    above        = copy(above)
+    below        = copy(below)
+    let dest     = above[index]
+    let src      = below[index]
+    let merged   = merge(above, index)
+    let offset   = 0
+    let matches  = 0
+    let toppings = []
+    let score    = 0
+
+    while (src.length > 0) {
+        let box   = src.shift()
+        let found = false
+
+        for (let i = offset; i < dest.length; i++) {
+            let dest_index = i
+            let boxes      = merged[dest_index]
+            found          = boxes.findIndex(value => same(value, box)) != -1
+
+            if (found) {
+                matches++
+                offset           = dest_index + 1
+                dest[dest_index] = box
+                if (toppings.length > 0) {
+                    insert(toppings, dest_index, above, index)
+                    toppings = []
+                    merged   = merge(above, index)
+                }
+                break
+            }
+        }
+
+        if (!found)
+            toppings.push(box)
+    }
+
+    if (toppings.length > 0)
+        insert(toppings, dest.length, above, index)
+
+    score = matches * (1 / dest.length)
+
+    return { above, score }
+}
+
+function backward(above, below, index, same) {
+    above      = reverse(copy(above))
+    below      = reverse(copy(below))
+    let result = forward(above, below, index, same)
+    reverse(result.above)
     return result
 }
 
+function reverse(array) {
+    return array.map(array => array.reverse())
+}
+
+function index(array) {
+    return array.map(function(value, index) { return { value, index } })
+}
+
 function sort(array) {
-    return array.sort((a,b)=> b.length - a.length)
+    return array.sort((a,b)=> b.value.length - a.value.length)
+}
+
+function create_below(indexed) {
+    return copy(indexed.map(object => object.value))
+}
+
+function create_above(below) {
+    let max_length = below[0].length
+    let above      = below.map(()=> empty_array(max_length))
+    above[0]       = below[0]
+    return above
 }
 
 function empty_array(length) {
@@ -39,100 +115,45 @@ function empty_array(length) {
     return result
 }
 
-function surface(source, above, index, same) {
-    let destination = above[index]
-
-    if (index == 0) {
-        source.forEach(function(box, index) {
-            destination[index] = box
-        })
-        return
-    }
-
-    source.forEach(function(box, box_index) {
-        let merged = merge(above, index)
-        let offset = last_empty(destination)
-
-        for (let i = offset; i < merged.length; i++) {
-            let boxes        = merged[i]
-            let target_index = i
-            let found        = ~boxes.findIndex(value => same(value, box))
-
-            if (found) {
-                destination[target_index] = box
-                source[box_index]         = empty
-
-                let toppings = get_toppings(source, box_index)
-
-                if (toppings.length > 0)
-                    insert(toppings, index, target_index, above)
-
-                break
-            }
-        }
-    })
-
-    let offset   = last_empty(destination)
-    let toppings = get_toppings(source, source.length)
-
-    if (toppings.length > 0)
-        insert(toppings, index, offset, above)
+function default_same(a, b) {
+    return a == b
 }
 
-function merge(above, index) {
-    let n      = above[0].length
-    let result = new Array(n)
+function copy(array) {
+    return array.map(array => array.slice())
+}
 
+function merge(columns, index) {
+    let n      = columns[0].length
+    let result = columns[0].map(()=> [])
     for (let i = 0; i < index; i++) {
-        above[i].forEach(function(box, box_index) {
-            if (box != empty) {
-                let boxes = result[box_index]
-                if (!boxes)
-                    boxes = result[box_index] = []
-                if (boxes.indexOf(box) == -1)
-                    boxes.push(box)
-            }
-        })
-    }
-
-    return result
-}
-
-function default_same(box, target) {
-    return box == target
-}
-
-function last_empty(array) {
-    let result = array.length
-    for (let i = array.length - 1; i >= 0; i--) {
-        let value = array[i]
-        if (value != empty)
-            break
-        result = i
-    }
-    return result
-}
-
-function get_toppings(boxes, box_index) {
-    let result = []
-    for (let i = 0; i < box_index; i++) {
-        let box = boxes[i]
-        if (box != empty) {
-            boxes[i] = empty
-            result.push(box)
+        let column_index = i
+        let column       = columns[column_index]
+        for (let j = 0; j < n; j++) {
+            let row_index = j
+            let value     = column[row_index]
+            let boxes     = result[row_index]
+            if (value != empty)
+                boxes.push(value)
         }
     }
     return result
 }
 
-function insert(boxes, target_column_index, index, columns) {
-    let empty_boxes = empty_array(boxes.length)
-    columns.forEach(function(column, column_index) {
-        let input = empty_boxes
-        if (column_index == target_column_index)
-            input = boxes
-        column.splice(index, 0, ...input)
-    })
+function empty_array(length) {
+    let result = []
+    for (let i = 0; i < length; i++)
+        result.push(empty)
+    return result
+}
+
+function insert(boxes, row_index, columns, column_index) {
+    let empty = empty_array(boxes.length)
+    for (let i = 0; i < columns.length; i++) {
+        let column = columns[i]
+        let values = i == column_index ? boxes : empty
+        column.splice(row_index, 0, ...values)
+    }
 }
 
 module.exports = align
