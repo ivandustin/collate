@@ -1,9 +1,27 @@
-const same  = require('./same')
-const align = require('./align')
+const assert = require('assert')
+const same   = require('./same')
+const align  = require('./align')
 
 function collate(verses) {
-    let data = verses.map(verse => verse.words)
-    return align(data, same)
+    assert(verses.length > 0)
+
+    let { book, chapter, verse } = verses[0]
+
+    verses.forEach(function(entry) {
+        assert.equal(entry.book, book)
+        assert.equal(entry.chapter, chapter)
+        assert.equal(entry.verse, verse)
+    })
+
+    let names       = verses.map(verse => verse.name)
+    let data        = verses.map(verse => verse.words)
+    let alignment   = align(data, same)
+    let manuscripts = alignment.map(function(words, index) {
+        let name = names[index]
+        return { name, words }
+    })
+    
+    return { book, chapter, verse, manuscripts }
 }
 
 module.exports = collate

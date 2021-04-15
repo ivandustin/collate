@@ -6,5 +6,8 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/ivandustin/collate"
+    },
+    "dependencies": {
+        "yargs": "^16.2.0"
     }
 }
