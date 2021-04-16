@@ -5,10 +5,22 @@ Inspired from the [CNTR Collation](https://greekcntr.org/collation/index.htm).
 
 Download the CNTR Transcriptions [here](https://greekcntr.org/downloads/index.htm).
 
+## Install
+
+```sh
+npm install -g collatia
+```
+
 ## Usage
 
 ```sh
-$ node index ../cntr/transcriptions/
+collate ../cntr/transcriptions -o output
+```
+
+## Command Line Interface
+
+```sh
+$ collate ../cntr/transcriptions
 Enter manuscript address (e.g. 40001001): 40001001
 ┌──────────┬──────────┬────────────┬─────────┬───────────┬────────┬──────────┬─────────┬────────┬──────────┐
 │ (index)  │    0     │     1      │    2    │     3     │   4    │    5     │    6    │   7    │    8     │
