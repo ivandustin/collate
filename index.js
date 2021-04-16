@@ -3,12 +3,20 @@ const package     = require('./package.json')
 const argparse    = require('argparse')
 const load        = require('./src/load')
 const interactive = require('./src/interactive')
+const collate_all = require('./src/collate-all')
+const save        = require('./src/save')
 
 function main() {
     let args        = parse()
     let directories = args.directory
+    let output      = args.o
     let manuscripts = load(directories)
-    interactive(manuscripts)
+    if (output) {
+        let books = collate_all(manuscripts)
+        save(books, output)
+    } else {
+        interactive(manuscripts)
+    }
 }
 
 function parse() {

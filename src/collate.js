@@ -5,12 +5,13 @@ const align  = require('./align')
 function collate(verses) {
     assert(verses.length > 0)
 
-    let { book, chapter, verse } = verses[0]
+    let { address, book, chapter, verse } = verses[0]
 
     verses.forEach(function(entry) {
-        assert.equal(entry.book, book)
+        assert.equal(entry.address, address)
+        assert.equal(entry.book   , book)
         assert.equal(entry.chapter, chapter)
-        assert.equal(entry.verse, verse)
+        assert.equal(entry.verse  , verse)
     })
 
     let names       = verses.map(verse => verse.name)
@@ -21,7 +22,7 @@ function collate(verses) {
         return { name, words }
     })
     
-    return { book, chapter, verse, manuscripts }
+    return { address, book, chapter, verse, manuscripts }
 }
 
 module.exports = collate
