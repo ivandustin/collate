@@ -1,7 +1,7 @@
 {
     "name": "collatia",
     "description": "Collate manuscripts",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "AGPL-3.0-or-later",
     "repository": {
         "type": "git",
@@ -12,5 +12,12 @@
     },
     "bin": {
         "collate": "index.js"
-    }
+    },
+    "keywords": [
+        "collate",
+        "manuscripts",
+        "greek",
+        "new testament",
+        "bible"
+    ]
 }
