@@ -1,14 +1,15 @@
 {
     "name": "collatia",
     "description": "Collate manuscripts",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "license": "GPL-3.0-or-later",
     "repository": {
         "type": "git",
         "url": "https://github.com/ivandustin/collate"
     },
     "dependencies": {
-        "argparse": "^2.0.1"
+        "argparse": "^2.0.1",
+        "mocha": "^8.3.2"
     },
     "bin": {
         "collate": "index.js"
@@ -19,5 +20,8 @@
         "greek",
         "new testament",
         "bible"
-    ]
+    ],
+    "scripts": {
+        "test": "mocha"
+    }
 }

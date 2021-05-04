@@ -1,8 +1,9 @@
-const compare = require('./compare')
-const empty   = ''
+const compare  = require('./compare')
+const overline = require('./overline')
+const empty    = ''
 
 function recode(word) {
-    let result = []
+    let array = []
 
     for (let i = 0; i < word.length; i++) {
         let character = word[i]
@@ -11,13 +12,18 @@ function recode(word) {
             let normal = String.fromCharCode(code)
 
             if (compare(character, normal) == 0) {
-                result.push(normal)
+                array.push(normal)
                 break
             }
         }
     }
 
-    return result.join(empty)
+    let result = array.join(empty)
+
+    if (overline.all(word))
+        result = overline.add(result)
+
+    return result
 }
 
 function normalize(word) {

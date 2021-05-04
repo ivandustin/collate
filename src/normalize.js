@@ -1,4 +1,5 @@
 const corrections = require('./corrections')
+const overline    = require('./overline')
 const recode      = require('./recode')
 const empty       = ''
 
@@ -56,7 +57,7 @@ function vid(word) {
 }
 
 function nomina_sacra(word) {
-    return word[0] == '=' ? word.substr(1) : word
+    return word[0] == '=' ? overline.add(word.substr(1)) : word
 }
 
 function numeric(word) {

@@ -57,7 +57,7 @@ function forward(above, below, index, same) {
                 offset           = dest_index + 1
                 dest[dest_index] = box
                 if (toppings.length > 0) {
-                    insert(toppings, dest_index, above, index)
+                    offset  += insert(toppings, dest_index, above, index)
                     toppings = []
                     merged   = merge(above, index)
                 }
@@ -154,6 +154,7 @@ function insert(boxes, row_index, columns, column_index) {
         let values = i == column_index ? boxes : empty
         column.splice(row_index, 0, ...values)
     }
+    return boxes.length
 }
 
 module.exports = align

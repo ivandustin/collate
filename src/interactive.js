@@ -1,5 +1,6 @@
 const readline = require('readline')
 const collate  = require('./collate')
+const overline = require('./overline')
 const space    = ' '
 
 async function main(manuscripts) {
@@ -22,8 +23,8 @@ function ask(interface, lookup) {
             if (!verses) {
                 console.error('Address not found')
             } else {
-                let names     = verses.map(verse => verse.name)
                 let collation = collate(verses)
+                collation     = remove_overline(collation)
                 let table     = create_table(collation)
 
                 console.table(table)
@@ -45,6 +46,13 @@ function create_lookup(manuscripts) {
         })
     })
     return lookup
+}
+
+function remove_overline(collation) {
+    collation.manuscripts.forEach(function(manuscript) {
+        manuscript.words = manuscript.words.map(overline.remove)
+    })
+    return collation
 }
 
 function create_table(collation) {
