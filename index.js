@@ -5,6 +5,10 @@ const nomina_sacra = require('./src/nomina-sacra')
 const overline     = require('./src/overline')
 const same         = require('./src/same')
 const collate      = require('./src/collate')
+const collate_all  = require('./src/collate-all')
+const recode       = require('./src/recode')
+const read         = require('./src/read')
+const load         = require('./src/load')
 
 module.exports = {
     align,
@@ -13,5 +17,9 @@ module.exports = {
     nomina_sacra,
     overline,
     same,
-    collate
+    collate,
+    collate_all,
+    recode,
+    read,
+    load
 }
