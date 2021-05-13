@@ -61,7 +61,7 @@ function nomina_sacra(word) {
 }
 
 function numeric(word) {
-    return word[0] == '$' ? word.substr(1) : word
+    return word[0] == '$' ? overline.add(word.substr(1)) : word
 }
 
 module.exports = normalize

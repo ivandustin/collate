@@ -1,20 +1,18 @@
-const align        = require('./src/align')
-const deviation    = require('./src/deviation')
-const compare      = require('./src/compare')
-const nomina_sacra = require('./src/nomina-sacra')
-const overline     = require('./src/overline')
-const same         = require('./src/same')
-const collate      = require('./src/collate')
-const collate_all  = require('./src/collate-all')
-const recode       = require('./src/recode')
-const read         = require('./src/read')
-const load         = require('./src/load')
+const align       = require('./src/align')
+const deviation   = require('./src/deviation')
+const compare     = require('./src/compare')
+const overline    = require('./src/overline')
+const same        = require('./src/same')
+const collate     = require('./src/collate')
+const collate_all = require('./src/collate-all')
+const recode      = require('./src/recode')
+const read        = require('./src/read')
+const load        = require('./src/load')
 
 module.exports = {
     align,
     deviation,
     compare,
-    nomina_sacra,
     overline,
     same,
     collate,
