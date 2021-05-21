@@ -4,7 +4,7 @@ const recode      = require('./recode')
 const empty       = ''
 
 function normalize(words) {
-    return corrections.apply(corrections.reconstruct(words))
+    return corrections.apply(corrections.reconstruct(corrections.fix(words)))
         .map(page_break)
         .map(column_break)
         .map(line_break)

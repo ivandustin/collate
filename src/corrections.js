@@ -71,4 +71,25 @@ function reconstruct(words) {
     return output
 }
 
-module.exports = { apply, reconstruct }
+function fix(words) {
+    return words.map(function(word) {
+        let first      = word[0]
+        let last       = word[word.length - 1]
+        let open_index = word.indexOf(open)
+        let a          = ''
+        let b          = word
+
+        if (~symbols.indexOf(first)) {
+            if (last == close) {
+                if (~open_index) {
+                    a = word.substring(1, open_index)
+                    b = first + word.substring(open_index)
+                }
+            }
+        }
+
+        return [a, b]
+    }).flat().filter(value => value)
+}
+
+module.exports = { apply, reconstruct, fix }
