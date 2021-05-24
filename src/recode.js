@@ -12,7 +12,7 @@ function recode(word) {
         if (normal)
             array.push(normal)
         else
-            if (is_greek(character))
+            if (is_greek(character) || is_coptic(character))
                 array.push(character.toUpperCase())
     }
 
@@ -36,6 +36,11 @@ function normalize(character) {
 function is_greek(character) {
     let code = character.charCodeAt(0)
     return (code >= 880 && code <= 1023) || (code >= 7936 && code <= 8191)
+}
+
+function is_coptic(character) {
+    let code = character.charCodeAt(0)
+    return code >= 11392 && code <= 11519
 }
 
 module.exports = recode
