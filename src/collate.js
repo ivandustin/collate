@@ -1,6 +1,7 @@
-const assert = require('assert')
-const same   = require('./same')
-const align  = require('./align')
+const assert  = require('assert')
+const same    = require('./same')
+const align   = require('./align')
+const realign = require('./realign')
 
 function collate(verses) {
     assert(verses.length > 0)
@@ -22,7 +23,7 @@ function collate(verses) {
 
     let names       = verses.map(verse => verse.name)
     let data        = verses.map(verse => verse.words)
-    let alignment   = align(data, same)
+    let alignment   = realign(align(data, same))
     let manuscripts = alignment.map(function(words, index) {
         let name = names[index]
         return { name, words }
