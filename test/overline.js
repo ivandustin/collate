@@ -37,6 +37,12 @@ describe('overline', function() {
     })
     describe('all', function() {
         it('is correct', function() {
+            let input    = ''
+            let expected = false
+            let actual   = overline.all(input)
+            assert.equal(actual, expected)
+        })
+        it('is correct', function() {
             let input    = 'A\u0305B\u0305C\u0305'
             let expected = true
             let actual   = overline.all(input)

@@ -14,7 +14,7 @@ function remove(word) {
 }
 
 function all(word) {
-    if (word.length % 2 == 0) {
+    if (word.length > 0 && word.length % 2 == 0) {
         for (let i = 1; i < word.length; i += 2) {
             let character = word[i]
             if (character != unicode)
